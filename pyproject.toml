@@ -1,0 +1,26 @@
+[project]
+name = "l2-error-pipeline"
+version = "0.1.0"
+description = "L2 Learner Error Analysis: GPT-2/Pythia + ERRANT pipeline"
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.0.0",
+    "transformers>=4.35.0",
+    "errant>=3.0.0",
+    "spacy>=3.5.0",
+    "numpy>=1.24.0",
+    "scipy>=1.10.0",
+    "matplotlib>=3.7.0",
+    "pandas>=2.0.0",
+]
+
+[project.optional-dependencies]
+# If you want to use Gemma for GEC instead of / alongside CoEdit
+llm-gec = ["accelerate>=0.25.0"]
+
+[tool.setuptools]
+py-modules = [
+    "analysis", "config", "csv_export", "data_loader",
+    "error_annotation", "gec", "generation",
+    "preprocess_efcamdat", "quickstart", "run_pipeline",
+]

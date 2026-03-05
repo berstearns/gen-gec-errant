@@ -1,0 +1,108 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+*.egg
+eggs/
+wheels/
+sdist/
+develop-eggs/
+.installed.cfg
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# pyenv / mypy / type checkers
+.python-version
+.mypy_cache/
+.pytype/
+.pyre/
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.settings/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Models and large files
+models/
+*.pt
+*.pth
+*.bin
+*.onnx
+*.h5
+*.hdf5
+*.pkl
+*.pickle
+*.joblib
+*.safetensors
+*.gguf
+
+# Experiment results and outputs
+outputs/
+results/
+logs/
+runs/
+wandb/
+mlruns/
+tensorboard/
+
+# Data (large datasets)
+data/
+*.csv
+*.tsv
+*.parquet
+*.feather
+*.arrow
+*.jsonl
+
+# Archives
+*.zip
+*.tar.gz
+*.tar.bz2
+*.7z
+*.rar
+
+# Environment variables
+.env
+.env.*
+
+# Lock files (uncomment if you want to track uv.lock)
+# uv.lock
