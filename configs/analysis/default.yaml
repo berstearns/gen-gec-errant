@@ -1,0 +1,3 @@
+output_dir: results
+skip_plots: false
+top_n_error_types: 10

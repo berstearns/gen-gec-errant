@@ -1,0 +1,19 @@
+params:
+  max_new_tokens: 50
+  min_new_tokens: 10
+  temperature: 1.0
+  top_k: 50
+  top_p: 0.95
+  do_sample: true
+  num_return_sequences: 1
+  repetition_penalty: 1.2
+
+model:
+  name: gpt2-small-all-data
+  hf_model_id: /home/b/p/research-sketches/automatic-generation-correction-errortagging/models/gpt2-small-all-data-20260220-151048
+  model_family: gpt2
+  is_learner_tuned: false
+
+batch_size: 8
+device: auto
+seed: 42

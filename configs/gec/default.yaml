@@ -1,0 +1,4 @@
+method: dedicated
+model_id: grammarly/coedit-large
+batch_size: 32
+device: auto
