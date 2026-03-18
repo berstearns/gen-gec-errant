@@ -45,3 +45,4 @@ output_dir: results
 skip_generation: false
 skip_gec: false
 skip_plots: false
+include_learner_baseline: true

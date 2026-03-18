@@ -39,3 +39,4 @@ device: auto
 seed: 42
 output_dir: outputs/qwen2.5-1.5b
 skip_plots: false
+include_learner_baseline: true

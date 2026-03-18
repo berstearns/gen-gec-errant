@@ -262,7 +262,8 @@ def run_pipeline(config: PipelineConfig) -> Tuple[list, dict]:
         all_results = _step_2_generate(config, items, device)
 
         # Add learner baseline before GEC so it flows through GEC → ERRANT → Analysis
-        _add_learner_baseline(items, all_results)
+        if config.include_learner_baseline:
+            _add_learner_baseline(items, all_results)
 
         # Step 3: GEC
         all_results = _step_3_gec(config, all_results)

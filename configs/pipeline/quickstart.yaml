@@ -36,3 +36,4 @@ batch_size: 4
 device: auto
 seed: 42
 output_dir: results/quickstart
+include_learner_baseline: true

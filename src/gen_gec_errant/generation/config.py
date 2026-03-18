@@ -14,6 +14,13 @@ class ModelConfig:
     checkpoint_path: Optional[str] = None
     model_family: str = "gpt2"
     is_learner_tuned: bool = False
+    # Registry fields (optional — ignored by YAML configs that don't set them)
+    params: Optional[str] = None
+    description: Optional[str] = None
+    gdrive_subpath: Optional[str] = None
+    checkpoint_subdir: str = "final"
+    batch_size: int = 8
+    gec_batch_size: int = 32
 
 
 @dataclass

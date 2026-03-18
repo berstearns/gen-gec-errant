@@ -37,3 +37,4 @@ device: cpu
 seed: 42
 output_dir: outputs/dummy
 skip_plots: true
+include_learner_baseline: true

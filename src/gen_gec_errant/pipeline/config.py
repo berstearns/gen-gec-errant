@@ -40,6 +40,9 @@ class PipelineConfig:
     skip_gec: bool = False
     skip_plots: bool = False
 
+    # Include original learner text as a baseline pseudo-model
+    include_learner_baseline: bool = True
+
 
 _SECTION_MAP = {
     "data_loader": DataLoaderConfig,

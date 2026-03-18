@@ -39,3 +39,4 @@ device: auto
 seed: 42
 output_dir: outputs/mamba-370m
 skip_plots: false
+include_learner_baseline: true

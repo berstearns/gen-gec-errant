@@ -67,3 +67,4 @@ batch_size: 2
 device: auto
 seed: 42
 skip_plots: false
+include_learner_baseline: true
