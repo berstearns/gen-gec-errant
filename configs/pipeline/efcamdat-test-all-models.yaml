@@ -19,7 +19,7 @@ generation:
 gec:
   method: dedicated
   model_id: grammarly/coedit-large
-  batch_size: 4
+  batch_size: 64
   device: auto
 
 annotation:
@@ -30,112 +30,134 @@ analysis:
   top_n_error_types: 10
 
 models:
-  # --- GPT-2 native ---
+  # --- GPT-2 native (~500MB, ~1.5GB, ~3GB) ---
   - name: gpt2-small
     hf_model_id: gpt2
     model_family: gpt2
+    batch_size: 128
 
   - name: gpt2-medium
     hf_model_id: gpt2-medium
     model_family: gpt2
+    batch_size: 64
 
   - name: gpt2-large
     hf_model_id: gpt2-large
     model_family: gpt2
+    batch_size: 32
 
-  # --- GPT-2 fine-tuned (artificial learners) ---
+  # --- GPT-2 fine-tuned (same sizes as native) ---
   - name: ft-gpt2-small
     hf_model_id: /workspace/ft-models/gpt2/gpt2-small-all-data-resume/final
     model_family: gpt2
     is_learner_tuned: true
+    batch_size: 128
 
   - name: ft-gpt2-medium
     hf_model_id: /workspace/ft-models/gpt2/gpt2-medium-all-data-resume/final
     model_family: gpt2
     is_learner_tuned: true
+    batch_size: 64
 
   - name: ft-gpt2-large
     hf_model_id: /workspace/ft-models/gpt2/gpt2-large-all-data-20260222-092036/final
     model_family: gpt2
     is_learner_tuned: true
+    batch_size: 32
 
-  # --- Pythia native ---
+  # --- Pythia native (~280MB to ~5.6GB) ---
   - name: pythia-70m
     hf_model_id: EleutherAI/pythia-70m
     model_family: pythia
+    batch_size: 128
 
   - name: pythia-160m
     hf_model_id: EleutherAI/pythia-160m
     model_family: pythia
+    batch_size: 128
 
   - name: pythia-410m
     hf_model_id: EleutherAI/pythia-410m
     model_family: pythia
+    batch_size: 64
 
   - name: pythia-1b
     hf_model_id: EleutherAI/pythia-1b
     model_family: pythia
+    batch_size: 32
 
   - name: pythia-1.4b
     hf_model_id: EleutherAI/pythia-1.4b
     model_family: pythia
+    batch_size: 16
 
-  # --- Pythia fine-tuned (artificial learners) ---
+  # --- Pythia fine-tuned (same sizes as native) ---
   - name: ft-pythia-70m
     hf_model_id: /workspace/ft-models/pythia/pythia-70m-all-data/final
     model_family: pythia
     is_learner_tuned: true
+    batch_size: 128
 
   - name: ft-pythia-160m
     hf_model_id: /workspace/ft-models/pythia/pythia-160m-all-data/final
     model_family: pythia
     is_learner_tuned: true
+    batch_size: 128
 
   - name: ft-pythia-410m
     hf_model_id: /workspace/ft-models/pythia/pythia-410m-all-data/final
     model_family: pythia
     is_learner_tuned: true
+    batch_size: 64
 
   - name: ft-pythia-1b
     hf_model_id: /workspace/ft-models/pythia/pythia-1b-all-data/final
     model_family: pythia
     is_learner_tuned: true
+    batch_size: 32
 
   - name: ft-pythia-1.4b
     hf_model_id: /workspace/ft-models/pythia/pythia-1.4b-all-data/final
     model_family: pythia
     is_learner_tuned: true
+    batch_size: 16
 
-  # --- SmolLM2 native ---
+  # --- SmolLM2 native (~540MB, ~1.4GB, ~6.8GB) ---
   - name: smollm2-135m
     hf_model_id: HuggingFaceTB/SmolLM2-135M
     model_family: smollm2
+    batch_size: 128
 
   - name: smollm2-360m
     hf_model_id: HuggingFaceTB/SmolLM2-360M
     model_family: smollm2
+    batch_size: 64
 
   - name: smollm2-1.7b
     hf_model_id: HuggingFaceTB/SmolLM2-1.7B
     model_family: smollm2
+    batch_size: 16
 
-  # --- SmolLM2 fine-tuned (artificial learners) ---
+  # --- SmolLM2 fine-tuned (same sizes as native) ---
   - name: ft-smollm2-135m
     hf_model_id: /workspace/ft-models/smollm2/smollm2-135m-all-data/final
     model_family: smollm2
     is_learner_tuned: true
+    batch_size: 128
 
   - name: ft-smollm2-360m
     hf_model_id: /workspace/ft-models/smollm2/smollm2-360m-all-data/final
     model_family: smollm2
     is_learner_tuned: true
+    batch_size: 64
 
   - name: ft-smollm2-1.7b
     hf_model_id: /workspace/ft-models/smollm2/smollm2-1.7b-all-data/final
     model_family: smollm2
     is_learner_tuned: true
+    batch_size: 16
 
-batch_size: 2
+batch_size: 32
 device: auto
 seed: 42
 output_dir: /workspace/gec-results/efcamdat-test

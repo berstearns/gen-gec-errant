@@ -27,7 +27,10 @@ def load_model(model_config: ModelConfig, device: torch.device) -> tuple:
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
-    model = AutoModelForCausalLM.from_pretrained(model_config.hf_model_id)
+    dtype = torch.float16 if device.type == "cuda" else torch.float32
+    model = AutoModelForCausalLM.from_pretrained(
+        model_config.hf_model_id, torch_dtype=dtype,
+    )
 
     if model_config.is_learner_tuned and model_config.checkpoint_path:
         logger.info("Loading learner checkpoint from: %s", model_config.checkpoint_path)

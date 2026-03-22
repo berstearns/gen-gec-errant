@@ -66,12 +66,16 @@ def _step_2_generate(
     for mc in model_configs:
         t0 = time.time()
 
+        # Use per-model batch_size if set, otherwise fall back to global
+        gen_batch = mc.batch_size if mc.batch_size != 8 else config.batch_size
+        logger.info("Using generation batch_size=%d for %s", gen_batch, mc.name)
+
         model, tokenizer = load_model(mc, device)
 
         logger.info("Generating with %s...", mc.name)
         continuations = generate_continuations(
             model, tokenizer, prompts, gen_params,
-            batch_size=config.batch_size, device=device,
+            batch_size=gen_batch, device=device,
         )
 
         full_texts = [f"{p} {c}" for p, c in zip(prompts, continuations)]
@@ -79,7 +83,7 @@ def _step_2_generate(
         logger.info("Computing perplexity for %s...", mc.name)
         perplexities = compute_perplexity(
             model, tokenizer, full_texts,
-            batch_size=config.batch_size, device=device,
+            batch_size=gen_batch, device=device,
         )
 
         elapsed = time.time() - t0

@@ -79,7 +79,10 @@ class DedicatedGECCorrector:
         logger.info("Loading dedicated GEC model: %s", config.model_id)
 
         self.tokenizer = AutoTokenizer.from_pretrained(config.model_id)
-        self.model = AutoModelForSeq2SeqLM.from_pretrained(config.model_id).to(device)
+        dtype = torch.float16 if device.type == "cuda" else torch.float32
+        self.model = AutoModelForSeq2SeqLM.from_pretrained(
+            config.model_id, torch_dtype=dtype,
+        ).to(device)
         self.model.eval()
 
     @torch.no_grad()
