@@ -19,7 +19,7 @@ from gen_gec_errant.generation.runner import (
     generate_continuations,
     compute_perplexity,
 )
-from gen_gec_errant.gec.runner import run_gec
+from gen_gec_errant.gec.runner import run_gec, load_gec_corrector
 from gen_gec_errant.gec.config import GECConfig
 from gen_gec_errant.annotation.runner import (
     run_annotation,
@@ -110,16 +110,36 @@ def _step_2_generate(
 
 
 def _step_3_gec(config: PipelineConfig, all_results: Dict[str, dict]) -> Dict[str, dict]:
-    """Run GEC on all generated text."""
+    """Run GEC on all generated text — loads GEC model once for all models."""
     logger.info("=" * 60)
     logger.info("STEP 3: Grammatical Error Correction")
     logger.info("=" * 60)
 
     gec_config = config.gec
+    device = get_device(gec_config.device)
+    corrector = load_gec_corrector(gec_config, device)
 
     for model_name, results in all_results.items():
         logger.info("Correcting %s outputs...", model_name)
-        run_gec(gec_config, results)
+
+        corrected_continuations: list[str] = []
+        for i in range(0, len(results["continuations"]), gec_config.batch_size):
+            batch = results["continuations"][i : i + gec_config.batch_size]
+            corrected_continuations.extend(corrector.correct(batch))
+
+        corrected_full_texts: list[str] = []
+        for i in range(0, len(results["full_texts"]), gec_config.batch_size):
+            batch = results["full_texts"][i : i + gec_config.batch_size]
+            corrected_full_texts.extend(corrector.correct(batch))
+
+        results["corrected_continuations"] = corrected_continuations
+        results["corrected_full_texts"] = corrected_full_texts
+        logger.info("Corrected %d sentences for %s", len(corrected_continuations), model_name)
+
+    del corrector
+    gc.collect()
+    if device.type == "cuda":
+        torch.cuda.empty_cache()
 
     return all_results
 

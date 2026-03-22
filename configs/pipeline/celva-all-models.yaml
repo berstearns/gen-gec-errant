@@ -19,7 +19,7 @@ generation:
 gec:
   method: dedicated
   model_id: grammarly/coedit-large
-  batch_size: 32
+  batch_size: 64
   device: auto
 
 annotation:
