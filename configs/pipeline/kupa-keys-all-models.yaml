@@ -1,5 +1,5 @@
 data_loader:
-  data_path: /workspace/data/norm-CELVA-SP.csv
+  data_path: /workspace/data/norm-KUPA-KEYS.csv
   text_column: text
   max_sentences: null
   min_words: 10
@@ -138,6 +138,6 @@ models:
 batch_size: 2
 device: auto
 seed: 42
-output_dir: /workspace/gec-results/celva-sp
+output_dir: /workspace/gec-results/kupa-keys
 skip_plots: false
 include_learner_baseline: true

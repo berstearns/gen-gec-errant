@@ -33,6 +33,7 @@ done
 # ── Resolve paths ─────────────────────────────────────────────
 SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 PYTHON="${SCRIPT_DIR}/.venv/bin/python"
+ENFORCER_DIR="${SCRIPT_DIR}/deploy/enforcers"
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
 PASSED=0; FAILED=0; SKIPPED=0
 
@@ -46,6 +47,28 @@ echo "  Configs:  ${CONFIGS_DIR} (${#CONFIGS[@]} files)"
 echo "  Output:   ${OUTPUT_ROOT}"
 echo "  Start:    $(date)"
 echo ""
+
+# ── Enforcer helper ──────────────────────────────────────────
+run_enforcers() {
+  local phase="$1"; shift
+  if [[ ! -f "$ENFORCER_DIR/run_all_enforcers.sh" ]]; then
+    echo "[WARN] Enforcers not found at $ENFORCER_DIR — skipping $phase checks"
+    return 0
+  fi
+  echo ""
+  echo "── Enforcers: $phase ──"
+  export PROJECT_DIR="$SCRIPT_DIR"
+  export CONFIGS_DIR
+  if bash "$ENFORCER_DIR/run_all_enforcers.sh" "$@" 2>&1; then
+    echo "[ENFORCERS] $phase: all passed"
+  else
+    echo "[ENFORCERS] $phase: some checks failed (continuing)"
+  fi
+  echo ""
+}
+
+# ── Pre-flight enforcers ─────────────────────────────────────
+run_enforcers "pre-flight" --pre-flight
 
 # ── Helper: write per-model YAML config (for ad-hoc use) ─────
 write_config() {
@@ -118,13 +141,20 @@ for config_file in "${CONFIGS[@]}"; do
   [[ -n "$SEED" ]]         && OVERRIDES="$OVERRIDES seed=${SEED}"
   [[ -n "$MAX_SENTENCES" ]] && OVERRIDES="$OVERRIDES data_loader.max_sentences=${MAX_SENTENCES}"
 
+  MODEL_OUTPUT="${OUTPUT_ROOT}/${NAME}-${TIMESTAMP}"
+
   echo ""
   echo "================================================================"
   echo "[RUN] $NAME  ($(date '+%H:%M:%S'))"
   echo "  config: $config_file"
-  echo "  output: ${OUTPUT_ROOT}/${NAME}-${TIMESTAMP}"
+  echo "  output: $MODEL_OUTPUT"
   [[ -n "$OVERRIDES" ]] && echo "  overrides:$OVERRIDES"
   echo "================================================================"
+
+  # Pre-experiment enforcers
+  export MODEL_NAME="$NAME"
+  export OUTPUT_DIR="$MODEL_OUTPUT"
+  run_enforcers "pre-experiment ($NAME)" --pre-experiment
 
   if $PYTHON -m gen_gec_errant.pipeline --config "$config_file" $OVERRIDES; then
     PASSED=$((PASSED + 1))
@@ -133,6 +163,10 @@ for config_file in "${CONFIGS[@]}"; do
     FAILED=$((FAILED + 1))
     echo "[FAIL] $NAME  ($(date '+%H:%M:%S'))"
   fi
+
+  # Post-experiment enforcers
+  export OUTPUT_DIR="$MODEL_OUTPUT"
+  run_enforcers "post-experiment ($NAME)" --post-experiment
 done
 
 echo ""
