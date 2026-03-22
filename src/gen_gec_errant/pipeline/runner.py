@@ -1,5 +1,6 @@
 """Pipeline runner: orchestrates all stages end-to-end."""
 
+import gc
 import json
 import logging
 import time
@@ -100,7 +101,8 @@ def _step_2_generate(
             "prompt_boundaries": [len(p) for p in prompts],
         }
 
-        del model
+        del model, tokenizer
+        gc.collect()
         if device.type == "cuda":
             torch.cuda.empty_cache()
 
@@ -271,6 +273,13 @@ def run_pipeline(config: PipelineConfig) -> Tuple[list, dict]:
         # Add learner baseline before GEC so it flows through GEC → ERRANT → Analysis
         if config.include_learner_baseline:
             _add_learner_baseline(items, all_results)
+
+        # Free GPU before loading GEC model
+        gc.collect()
+        if device.type == "cuda":
+            torch.cuda.empty_cache()
+            free_mb = torch.cuda.mem_get_info()[0] // (1024 * 1024)
+            logger.info("GPU memory free before GEC: %d MiB", free_mb)
 
         # Step 3: GEC
         all_results = _step_3_gec(config, all_results)
