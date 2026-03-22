@@ -81,9 +81,10 @@ def _step_2_generate(
         full_texts = [f"{p} {c}" for p, c in zip(prompts, continuations)]
 
         logger.info("Computing perplexity for %s...", mc.name)
+        ppl_batch = min(gen_batch, 64)
         perplexities = compute_perplexity(
             model, tokenizer, full_texts,
-            batch_size=gen_batch, device=device,
+            batch_size=ppl_batch, device=device,
         )
 
         elapsed = time.time() - t0
