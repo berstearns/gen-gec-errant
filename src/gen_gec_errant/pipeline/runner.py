@@ -80,8 +80,10 @@ def _step_2_generate(
 
         full_texts = [f"{p} {c}" for p, c in zip(prompts, continuations)]
 
+        if device.type == "cuda":
+            torch.cuda.empty_cache()
         logger.info("Computing perplexity for %s...", mc.name)
-        ppl_batch = min(gen_batch, 64)
+        ppl_batch = min(gen_batch, 32)
         perplexities = compute_perplexity(
             model, tokenizer, full_texts,
             batch_size=ppl_batch, device=device,
